@@ -36,8 +36,7 @@ Your shader cache effectively survives cache clears and reinstalls, since the ba
 
 ## Related
 
-Part of a broader [CachyOS + Hyprland performance guide](https://cachyosperformance.lovable.app) — see section "Shader Cache That Survives Reinstalls" for more context on why this matters.
-
+Part of a broader [CachyOS + Hyprland performance guide](https://cachyosperformance.lovable.app) — see section "Shader Cache That Survives Reinstalls" for more context on why this matters.(website made by me also)
 ## License
 
 MIT
