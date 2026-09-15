@@ -16,18 +16,22 @@ Steam's "Clear local shader cache" and game reinstalls wipe the DXVK state cache
 
 Your shader cache effectively survives cache clears and reinstalls, since the backup lives outside the folders Steam touches.
 
-## Installation
+## Setup
 
-1. Clone this repo or download `dxvk-guard.sh`
+By default DXVK writes its state cache into `steamapps/shadercache/<APPID>/DXVK_state_cache/`. Steam's "Clear local shader cache" button (Settings → Downloads) wipes that folder for every game, and uninstalling or reinstalling a game deletes it too, since it lives inside Steam-managed folders. That's why the cache resets and the stutter comes back.
+
+1. Download `dxvk-guard.sh` and save it to `~/.local/bin/dxvk-guard.sh`
 2. Make it executable:
    ```bash
-   chmod +x dxvk-guard.sh
+   chmod +x ~/.local/bin/dxvk-guard.sh
    ```
-3. Open the script and set `CACHE_DIR` and `BACKUP_DIR` to match your DXVK cache location and where you want backups stored
-4. Add it as a Steam launch option for the game you want to protect:
+3. (Optional) Open the script and adjust `CACHE_DIR` / `BACKUP_DIR` if your Steam library isn't in the default location — it assumes `~/.local/share/Steam/steamapps/shadercache`
+4. Set it as a Steam launch option for the game you want to protect (right-click the game → Properties → Launch Options):
    ```
-   gamemoderun /path/to/dxvk-guard.sh %command%
+   gamemoderun ~/.local/bin/dxvk-guard.sh %command%
    ```
+
+That's it — the cache now survives Steam cache clears and reinstalls.
 
 ## Requirements
 
@@ -36,7 +40,8 @@ Your shader cache effectively survives cache clears and reinstalls, since the ba
 
 ## Related
 
-Part of a broader [CachyOS + Hyprland performance guide](https://cachyosperformance.lovable.app) — see section "Shader Cache That Survives Reinstalls" for more context on why this matters.(website made by me also)
+Part of a broader [CachyOS + Hyprland performance guide](https://cachyosperformance.lovable.app) — see section "Shader Cache That Survives Reinstalls" for more context on why this matters.
+
 ## License
 
 MIT
