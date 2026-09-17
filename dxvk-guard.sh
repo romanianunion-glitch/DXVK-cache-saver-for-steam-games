@@ -1,3 +1,6 @@
+# DXVK Cache Saver for Steam Games
+# Copyright (c) 2026 RomanianUnion-Glitch
+# Licensed under the MIT License.
 #!/bin/bash
 
 CACHE_DIR="$HOME/.local/share/Steam/steamapps/shadercache"
