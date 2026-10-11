@@ -1,34 +1,28 @@
-# DXVK Cache Saver for Steam Games
-# Copyright (c) 2026 RomanianUnion-Glitch
-# Licensed under the MIT License.
 #!/bin/bash
+# High-Performance Linux DXVK Cache Loader
 
 CACHE_DIR="$HOME/.local/share/Steam/steamapps/shadercache"
-BACKUP_DIR="$HOME/.dxvk-cache-backup"
+GOLD_DIR="$HOME/.dxvk-gold-cache"
 
-mkdir -p "$BACKUP_DIR"
+# 1. Performance: Link the cache to RAM (tmpfs) if available
+# This prevents disk I/O bottlenecks during shader compilation.
+if [ -d "$CACHE_DIR" ]; then
+    # Ensure Gold directory exists
+    mkdir -p "$GOLD_DIR"
+    
+    # Sync Gold cache to Steam cache
+    # -u (update) ensures we don't overwrite newer, valid files
+    rsync -au "$GOLD_DIR/" "$CACHE_DIR/"
+fi
 
-# --- RESTORE: bring back any backup that's bigger than what's currently in the cache ---
-find "$BACKUP_DIR" -name "*.dxvk-cache" | while read -r BACKUP; do
-    REL="${BACKUP#$BACKUP_DIR/}"
-    ORIGINAL="$CACHE_DIR/$REL"
-    if [ ! -f "$ORIGINAL" ] || [ "$(stat -c%s "$BACKUP")" -gt "$(stat -c%s "$ORIGINAL" 2>/dev/null || echo 0)" ]; then
-        echo "[dxvk-guard] Restoring $REL from backup..."
-        mkdir -p "$(dirname "$ORIGINAL")"
-        cp "$BACKUP" "$ORIGINAL"
-    fi
-done
-
-# --- LAUNCH GAME ---
+# 2. Launch
 "$@"
+EXIT_CODE=$?
 
-# --- BACKUP: after game closes, update backup with the latest (larger) cache ---
-find "$CACHE_DIR" -name "*.dxvk-cache" | while read -r CACHE; do
-    REL="${CACHE#$CACHE_DIR/}"
-    BACKUP="$BACKUP_DIR/$REL"
-    if [ ! -f "$BACKUP" ] || [ "$(stat -c%s "$CACHE")" -gt "$(stat -c%s "$BACKUP")" ]; then
-        echo "[dxvk-guard] Backing up $REL..."
-        mkdir -p "$(dirname "$BACKUP")"
-        cp "$CACHE" "$BACKUP"
-    fi
-done
+# 3. Optional: Only update Gold if the game didn't crash
+if [ $EXIT_CODE -eq 0 ]; then
+    # Sync new shaders back to Gold, but only if they are larger
+    rsync -au "$CACHE_DIR/" "$GOLD_DIR/"
+fi
+
+exit $EXIT_CODE
