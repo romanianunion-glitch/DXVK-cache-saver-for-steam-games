@@ -1,0 +1,9 @@
+PROTON_ENABLE_FSYNC=1 
+STAGING_SHARED_MEMORY=1 
+STAGING_WRITECOPY=1 WINE_LARGE_ADDRESS_AWARE=1 
+DXVK_ASYNC=1 
+__GL_THREADED_OPTIMIZATIONS=1 __GL_MaxFramesAllowed=1 WINE_CPU_TOPOLOGY=10:2 
+DXVK_NVAPI=1 
+gamemoderun ~/.local/bin/dxvk-guard.sh %command%
+
+#Change the CPU topology to match yours
